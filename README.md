@@ -31,7 +31,7 @@ public/
   admin/                  Sveltia CMS (index.html + config.yml)
   favicon.svg             ikon monogram "D"
   og-image.png            1200×630 untuk Open Graph / Twitter
-  robots.txt              allow-all + referensi sitemap
+  robots.txt              allow-all, /admin/ disallow, referensi sitemap
 src/
   content.config.ts       skema content collections (zod)
   content/
@@ -49,10 +49,11 @@ src/
   i18n/                     labels.ts (label modal), types.ts (tipe bersama)
   lib/                      content.ts (akses koleksi), modal-payload.ts (payload JSON modal)
   styles/                   tokens.css, base.css, components.css, motion.css
-  scripts/                  main.ts + lang, scroll, reveal, pointer, modal, nav
+  scripts/                  main.ts + lang, scroll, reveal, pointer, modal, nav, carousel
 legacy/index.html           situs single-file sebelumnya (arsip, tidak dipakai build)
-backup/                     snapshot historis
-deploy-backup/              salinan .deploy/ sebelum migrasi
+backup/                     snapshot historis (tidak di-commit, hanya lokal)
+deploy-backup/              salinan .deploy/ sebelum migrasi (tidak di-commit)
+../cms-auth-worker/         source OAuth worker CMS (deploy terpisah, di luar repo ini)
 ```
 
 ---
@@ -84,13 +85,28 @@ sedangkan modal memakai blok `en:` dan `id:` (tag, status, sub, overview, challe
 Buka `/admin/` setelah situs ter-deploy. CMS menulis langsung ke repository sebagai commit,
 dan setiap commit memicu build ulang.
 
-Sebelum dipakai, siapkan sekali:
+**Mengaktifkan login CMS (sekali setup, ±5 menit):**
 
-1. Isi `backend.repo` di `public/admin/config.yml` dengan `OWNER/REPO` yang benar.
-2. Deploy OAuth worker (mis. `sveltia-cms-auth` di Cloudflare Workers) lalu isi `backend.base_url`.
-3. Login lewat GitHub.
+OAuth worker sudah ter-deploy di `https://sveltia-cms-auth.dhimasbbagaskara.workers.dev`
+(official Sveltia CMS Authenticator — source di folder sebelah `../cms-auth-worker/`).
+Yang tersisa hanya pendaftaran OAuth App di GitHub:
 
-Repository ini **tidak** menyertakan implementasi OAuth.
+1. Buka <https://github.com/settings/applications/new> (login sebagai akun GitHub repo ini).
+2. Isi:
+   - **Application name**: `Dhimas Portfolio CMS`
+   - **Homepage URL**: `https://dhimasbb.web.id`
+   - **Authorization callback URL**: `https://sveltia-cms-auth.dhimasbbagaskara.workers.dev/callback`
+3. Klik **Register application**, lalu salin **Client ID** dan klik **Generate a new client secret** (salin Client Secret — hanya muncul sekali).
+4. Jalankan di folder `../cms-auth-worker/` dan tempel nilai saat diminta:
+   ```bash
+   npx wrangler secret put GITHUB_CLIENT_ID
+   npx wrangler secret put GITHUB_CLIENT_SECRET
+   ```
+5. Buka <https://dhimasbb.web.id/admin/> → **Login with GitHub** → authorize.
+
+Catatan:
+- Repo **harus sudah ter-push** ke GitHub sebelum CMS bisa dipakai (CMS membaca & menulis ke repo GitHub, bukan disk lokal).
+- Untuk mengedit dari `localhost:4321/admin`, pakai **Personal Access Token** (scope `contents: write`) — OAuth worker hanya mengirim token ke domain yang terdaftar (`dhimasbb.web.id`), localhost tidak termasuk.
 
 ### Opsi B — edit Markdown langsung di GitHub (selalu tersedia)
 
@@ -170,6 +186,14 @@ atau gunakan blok `>-` untuk paragraf panjang.
 - **Modal**: delapan entri proyek ditanam sebagai `<script type="application/json" id="projects-data">`
   (hanya teks modal, tanpa `card.*`). Tidak ada request jaringan saat modal dibuka.
 - **Breakpoint**: 1080 / 980 / 640 / 420 px. Hero memakai `min-height:100svh` dengan fallback `100vh`.
+- **Motion layer** (`motion.css` + `scripts/*.ts`): word-split title reveal, scroll reveal
+  (directional/scale), scrollspy nav + progress bar, card tilt 3D + spotlight, magnetic buttons
+  & chips (pointer:fine saja), hero blob drift + marquee scroll-velocity, FLIP modal (panel tumbuh
+  dari kartu yang diklik) dengan focus trap + rAF focus, experience rail terisi mengikuti scroll,
+  highlight sweep pada paragraf About, sticky section heading (desktop), native CSS
+  `animation-timeline: view()` untuk dot rail (progressive enhancement), dan carousel
+  scroll-snap khusus mobile (≤640px) dengan dots sinkron. Semua dihormati oleh
+  `prefers-reduced-motion`.
 - **Reduced motion** dihormati: `prefers-reduced-motion: reduce` mematikan animasi dan membuat semua
   elemen reveal langsung terlihat.
 - **SEO**: canonical, OG/Twitter meta, JSON-LD `Person`, `sitemap-index.xml` dari `@astrojs/sitemap`.
@@ -178,10 +202,20 @@ atau gunakan blok `>-` untuk paragraf panjang.
 
 ## Deploy
 
-Output statis di `dist/` dapat dilayani hosting apa pun (Cloudflare Pages, Netlify, Vercel, Nginx).
+Output statis di `dist/` dapat dilayani hosting apa pun (Cloudflare Pages, Netflfy, Vercel, Nginx).
 Tidak ada server runtime.
 
 ```
 Build command : npm run build
 Output folder : dist
 ```
+
+Deploy yang dipakai proyek ini (Cloudflare Pages, folder `dist/` — jangan deploy root repo
+karena berisi `legacy/`, `backup/`, dokumen pribadi, dan memori `.workbuddy-ai/`):
+
+```bash
+npm run build
+npx wrangler pages deploy dist --project-name=dhimasbb-portfolio --branch=main --commit-dirty=true
+```
+
+Domain kustom `dhimasbb.web.id` terhubung ke project Pages ini.

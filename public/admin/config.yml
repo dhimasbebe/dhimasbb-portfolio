@@ -2,21 +2,29 @@
 # Sveltia CMS configuration — Dhimas Bintang Bagaskara portfolio
 # =============================================================================
 # The CMS is a Git-based editor for the Markdown files in src/content/.
-# Deploying a commit triggers a rebuild, so every edit goes live automatically.
+# Every edit becomes a commit, which triggers a rebuild — changes go live
+# automatically after deploy.
 #
-# BEFORE FIRST USE
-#   1. Replace OWNER/REPO in `backend.repo` with the real GitHub repository.
-#   2. Register the OAuth worker (see README.md → "Editing content").
-#   3. Set `base_url` to that worker's URL.
+# OAuth status (2026-10-18):
+#   DONE   — OAuth worker deployed: https://sveltia-cms-auth.dhimasbbagaskara.workers.dev
+#            (official Sveltia CMS Authenticator; ALLOWED_DOMAINS = dhimasbb.web.id
+#            + *.dhimasbb-portfolio.pages.dev)
+#   TODO   — one-time setup on GitHub, see README.md → "Mengedit konten" →
+#            "Mengaktifkan login CMS". In short: create a GitHub OAuth App with
+#            callback URL <worker-url>/callback, then set the worker secrets:
+#              npx wrangler secret put GITHUB_CLIENT_ID
+#              npx wrangler secret put GITHUB_CLIENT_SECRET
+#            Until the secrets exist, /admin shows the worker's error page.
 #
-# No OAuth is implemented in this repository by design.
+# Editing Markdown directly on GitHub always works as a fallback (no OAuth
+# needed): src/content/... → edit file → commit.
 # =============================================================================
 
 backend:
   name: github
-  repo: OWNER/REPO
+  repo: dhimasbebe/dhimasbb-portfolio
   branch: main
-  base_url: https://YOUR-OAUTH-WORKER.workers.dev
+  base_url: https://sveltia-cms-auth.dhimasbbagaskara.workers.dev
   auth_endpoint: auth
   commit_messages:
     create: 'cms: create {{collection}} "{{slug}}"'
