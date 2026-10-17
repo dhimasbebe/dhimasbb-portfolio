@@ -1,0 +1,15 @@
+---
+import type { Profile } from '../lib/content';
+
+interface Props {
+  footer: Profile['footer'];
+}
+
+const { footer } = Astro.props;
+---
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <span>{footer.copyright}</span>
+    <a href="#home"><span data-en={footer.backToTop.en} data-id={footer.backToTop.id}>{footer.backToTop.en}</span> ↑</a>
+  </div>
+</footer>

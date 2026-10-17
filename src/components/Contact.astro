@@ -1,0 +1,35 @@
+---
+import type { Profile } from '../lib/content';
+
+interface Props {
+  section: Profile['sections']['contact'];
+  contact: Profile['contact'];
+}
+
+const { section, contact } = Astro.props;
+---
+<section class="contact" id="contact">
+  <div class="contact-glow" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="reveal reveal-scale">
+      <span class="sec-label" style="justify-content:center">{section.label}</span>
+      <h2 class="contact-title" data-en={section.title.en} data-id={section.title.id}>{section.title.en}</h2>
+      {section.intro ? <p class="contact-sub" data-en={section.intro.en} data-id={section.intro.id}>{section.intro.en}</p> : null}
+      <div class="contact-actions">
+        <a href={'mailto:' + contact.email} class="btn btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+          <span data-en={contact.emailLabel.en} data-id={contact.emailLabel.id}>{contact.emailLabel.en}</span>
+        </a>
+        <a href={contact.linkedin} target="_blank" rel="noopener" class="btn btn-ghost">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-.95 1.83-1.95 3.77-1.95 4.03 0 4.78 2.5 4.78 5.75V21h-4v-5.6c0-1.34-.02-3.06-1.9-3.06-1.9 0-2.2 1.46-2.2 2.96V21H9z"/></svg>
+          <span>LinkedIn</span>
+        </a>
+        <a href={contact.whatsapp} target="_blank" rel="noopener" class="btn btn-ghost">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 15L2 22l5.15-1.5A9.9 9.9 0 1 0 12.04 2zm0 18.1a8.1 8.1 0 0 1-4.13-1.13l-.3-.18-3.06.9.9-2.98-.2-.31a8.1 8.1 0 1 1 6.79 3.7zm4.45-6.06c-.24-.12-1.44-.71-1.66-.79-.22-.08-.38-.12-.54.12-.16.24-.62.79-.76.95-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.34-1.67-.14-.24-.02-.37.1-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.2-.47-.4-.4-.54-.41h-.46c-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2 0 1.18.86 2.32.98 2.48.12.16 1.69 2.58 4.1 3.62.57.25 1.02.4 1.37.51.58.18 1.1.16 1.52.1.46-.07 1.44-.59 1.64-1.16.2-.57.2-1.06.14-1.16-.06-.1-.22-.16-.46-.28z"/></svg>
+          <span>WhatsApp</span>
+        </a>
+      </div>
+      <a href={'mailto:' + contact.email} class="contact-mail">{contact.mailLink}</a>
+    </div>
+  </div>
+</section>

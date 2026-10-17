@@ -1,0 +1,46 @@
+/* ==========================================================================
+   tokens.css — design tokens + element resets.
+   Copied 1:1 from the original single-file <style> block (index.html).
+   ========================================================================== */
+
+:root{
+  --bg:#0E0C0B;
+  --bg2:#131010;
+  --surface:#181312;
+  --surface2:#1E1715;
+  --line:rgba(243,233,226,.09);
+  --line-strong:rgba(243,233,226,.18);
+  --text:#F3E9E2;
+  --muted:#A8968B;
+  --dim:#7A6A61;
+  --terra:#C96F4A;
+  --terra2:#E2725B;
+  --terra-dim:rgba(201,111,74,.14);
+  --serif:"Fraunces",Georgia,serif;
+  --sans:"Plus Jakarta Sans",system-ui,-apple-system,sans-serif;
+  --ease:cubic-bezier(.22,1,.36,1);
+  --nav-h:76px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+
+body{
+  background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:400;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  background-image:radial-gradient(ellipse at 50% -10%,rgba(201,111,74,.07),transparent 55%);
+}
+
+::selection{background:var(--terra);color:#140F0D}
+
+img,svg{display:block;max-width:100%}
+
+a{color:inherit}
+
+button{font-family:inherit}
+
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:#0B0908}
+::-webkit-scrollbar-thumb{background:#2A211D;border-radius:10px}
+::-webkit-scrollbar-thumb:hover{background:var(--terra)}

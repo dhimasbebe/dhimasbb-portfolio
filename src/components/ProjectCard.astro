@@ -1,0 +1,40 @@
+---
+import type { ProjectEntry } from '../lib/content';
+
+interface Props {
+  entry: ProjectEntry;
+  index: number;
+}
+
+const { entry, index } = Astro.props;
+const project = entry.data;
+
+const num = String(index + 1).padStart(2, '0');
+const delayClass = index % 2 === 1 ? ' d1' : '';
+
+// Only the e-commerce card has a translated title, so the data attributes are
+// emitted only when the two languages actually differ.
+const titleIsTranslated = project.title.en !== project.title.id;
+const titleAttrs = titleIsTranslated
+  ? { 'data-en': project.title.en, 'data-id': project.title.id }
+  : {};
+---
+<article class={'project-card reveal' + delayClass} data-project={entry.id} tabindex="0" role="button" aria-label={project.card.ariaLabel}>
+  <div class="pc-inner">
+    <div class="pc-top"><span class="pc-num">{num}</span><span class="pc-tag" data-en={project.card.tag.en} data-id={project.card.tag.id}>{project.card.tag.en}</span></div>
+    <h3 class="pc-title" {...titleAttrs}>{project.title.en}</h3>
+    <p class="pc-desc" data-en={project.card.desc.en} data-id={project.card.desc.id}>{project.card.desc.en}</p>
+    <div class="pc-foot">
+      <div class="chips">
+        {project.card.chips.map((chip) =>
+          chip.en === chip.id ? (
+            <span class="chip">{chip.en}</span>
+          ) : (
+            <span class="chip" data-en={chip.en} data-id={chip.id}>{chip.en}</span>
+          ),
+        )}
+      </div>
+      <span class="pc-arrow" aria-hidden="true">↗</span>
+    </div>
+  </div>
+</article>

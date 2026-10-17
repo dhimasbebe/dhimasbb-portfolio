@@ -1,0 +1,16 @@
+---
+import type { Bilingual } from '../i18n/types';
+
+interface Props {
+  label: string;
+  title: Bilingual;
+  intro?: Bilingual;
+}
+
+const { label, title, intro } = Astro.props;
+---
+<div class="section-head reveal">
+  <span class="sec-label">{label}</span>
+  <h2 class="sec-title" data-en={title.en} data-id={title.id}>{title.en}</h2>
+  {intro ? <p class="sec-intro" data-en={intro.en} data-id={intro.id}>{intro.en}</p> : null}
+</div>

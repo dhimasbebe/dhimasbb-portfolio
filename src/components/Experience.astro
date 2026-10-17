@@ -1,0 +1,35 @@
+---
+import type { ExperienceItem, Profile } from '../lib/content';
+import SectionHead from './SectionHead.astro';
+
+interface Props {
+  section: Profile['sections']['experience'];
+  items: ExperienceItem[];
+}
+
+const { section, items } = Astro.props;
+---
+<section class="section" id="experience">
+  <div class="wrap">
+    <SectionHead label={section.label} title={section.title} />
+    <div class="exp-list">
+      {items.map((item) => (
+        <article class="exp-item reveal">
+          <div class="exp-side">
+            <span class="exp-tag" data-en={item.tag.en} data-id={item.tag.id}>{item.tag.en}</span>
+            <span class="exp-period">{item.period}</span>
+          </div>
+          <div>
+            <h3 class="exp-role">{item.role}</h3>
+            <p class="exp-company">{item.company}</p>
+            <ul class="exp-points">
+              {item.points.map((point) => (
+                <li data-en={point.en} data-id={point.id}>{point.en}</li>
+              ))}
+            </ul>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

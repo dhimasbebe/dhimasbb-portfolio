@@ -1,0 +1,47 @@
+---
+import About from '../components/About.astro';
+import Contact from '../components/Contact.astro';
+import Education from '../components/Education.astro';
+import Experience from '../components/Experience.astro';
+import Footer from '../components/Footer.astro';
+import Hero from '../components/Hero.astro';
+import Marquee from '../components/Marquee.astro';
+import ProjectModal from '../components/ProjectModal.astro';
+import Projects from '../components/Projects.astro';
+import Publications from '../components/Publications.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import {
+  getCertifications,
+  getEducation,
+  getExperience,
+  getProfile,
+  getProjects,
+  getPublications,
+} from '../lib/content';
+
+const profile = await getProfile();
+const experience = await getExperience();
+const education = await getEducation();
+const certifications = await getCertifications();
+const projects = await getProjects();
+const publications = await getPublications();
+---
+<BaseLayout profile={profile}>
+  <main>
+    <Hero hero={profile.hero} cv={profile.cv} />
+    <Marquee words={profile.marquee} />
+    <About section={profile.sections.about} about={profile.about} />
+    <Experience section={profile.sections.experience} items={experience} />
+    <Education
+      section={profile.sections.education}
+      labels={profile.education}
+      items={education}
+      certifications={certifications}
+    />
+    <Projects section={profile.sections.projects} projects={projects} />
+    <Publications section={profile.sections.publications} items={publications} />
+    <Contact section={profile.sections.contact} contact={profile.contact} />
+  </main>
+  <Footer footer={profile.footer} />
+  <ProjectModal projects={projects} />
+</BaseLayout>

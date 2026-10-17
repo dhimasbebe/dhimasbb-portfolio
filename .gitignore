@@ -1,4 +1,6 @@
 node_modules/
+dist/
+.astro/
 .pw/
 .workbuddy-ai/
 ~$*
@@ -7,3 +9,10 @@ Script Portofolio Dhimas.docx
 Thumbs.db
 .wrangler/
 .deploy/
+npm-debug.log*
+.env
+.env.production
+
+# local working snapshots (kept on disk, not published to the repo)
+backup/
+deploy-backup/

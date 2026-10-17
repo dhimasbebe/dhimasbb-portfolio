@@ -1,0 +1,47 @@
+---
+import type { Profile } from '../lib/content';
+
+interface Props {
+  hero: Profile['hero'];
+  cv: Profile['cv'];
+}
+
+const { hero, cv } = Astro.props;
+
+/** Server-renders the final counter value (two digits + suffix). */
+const formatCount = (value: number, suffix: string): string =>
+  String(value).padStart(2, '0') + suffix;
+---
+<section class="hero" id="home">
+  <div class="hero-bg" aria-hidden="true">
+    <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
+  </div>
+  <div class="wrap hero-inner">
+    <span class="eyebrow">{hero.eyebrow}</span>
+    <h1 class="hero-title">
+      {hero.titleLines.map((line) => (
+        <span class="line"><span class="line-inner">{line.accent ? <em>{line.text.en}</em> : line.text.en}</span></span>
+      ))}
+    </h1>
+    <p class="hero-sub" data-en={hero.sub.en} data-id={hero.sub.id}>{hero.sub.en}</p>
+    <div class="hero-actions">
+      <a href={hero.primaryCta.href} class="btn btn-primary">
+        <span data-en={hero.primaryCta.label.en} data-id={hero.primaryCta.label.id}>{hero.primaryCta.label.en}</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+      </a>
+      <a href={cv.href} download class="btn btn-ghost">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+        <span data-en={cv.label.en} data-id={cv.label.id}>{cv.label.en}</span>
+      </a>
+    </div>
+    <div class="hero-stats">
+      {hero.stats.map((stat) => (
+        <div class="stat">
+          <span class="stat-num" data-count={stat.value} data-suffix={stat.suffix || undefined}>{formatCount(stat.value, stat.suffix)}</span>
+          <span class="stat-label" data-en={stat.label.en} data-id={stat.label.id}>{stat.label.en}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+  <a href="#about" class="scroll-cue" aria-label={hero.scrollCueLabel}><span></span></a>
+</section>

@@ -1,0 +1,43 @@
+---
+import type { Profile } from '../lib/content';
+import SectionHead from './SectionHead.astro';
+
+interface Props {
+  section: Profile['sections']['about'];
+  about: Profile['about'];
+}
+
+const { section, about } = Astro.props;
+
+/** Duty cards get staggered delays from the second card onwards (d1, d2 …). */
+const delayClass = (index: number): string => (index === 0 ? '' : ' d' + index);
+---
+<section class="section" id="about">
+  <div class="wrap">
+    <SectionHead label={section.label} title={section.title} />
+    <div class="about-grid">
+      <div class="about-text reveal">
+        {about.paragraphs.map((paragraph, index) => (
+          <p class={index === 0 ? 'lead' : undefined} data-en={paragraph.en} data-id={paragraph.id}>{paragraph.en}</p>
+        ))}
+      </div>
+      <div class="about-side">
+        {about.duties.map((duty, index) => (
+          <div class={'duty reveal' + delayClass(index)}>
+            <span class="duty-num">{duty.num}</span>
+            <h4 data-en={duty.title.en} data-id={duty.title.id}>{duty.title.en}</h4>
+            <p data-en={duty.body.en} data-id={duty.body.id}>{duty.body.en}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+    <div class="toolbox reveal">
+      <span class="sec-label" data-en={about.toolboxLabel.en} data-id={about.toolboxLabel.id}>{about.toolboxLabel.en}</span>
+      <div class="chips">
+        {about.chips.map((chip) => (
+          <span class="chip">{chip}</span>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

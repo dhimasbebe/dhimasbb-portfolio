@@ -1,0 +1,22 @@
+---
+import type { Profile, ProjectEntry } from '../lib/content';
+import ProjectCard from './ProjectCard.astro';
+import SectionHead from './SectionHead.astro';
+
+interface Props {
+  section: Profile['sections']['projects'];
+  projects: ProjectEntry[];
+}
+
+const { section, projects } = Astro.props;
+---
+<section class="section" id="projects">
+  <div class="wrap">
+    <SectionHead label={section.label} title={section.title} intro={section.intro} />
+    <div class="projects-grid">
+      {projects.map((entry, index) => (
+        <ProjectCard entry={entry} index={index} />
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,36 @@
+/* ==========================================================================
+   base.css — fixed page chrome, layout primitives, scroll-reveal base state.
+   Rules copied from the original single-file <style> block (index.html),
+   with the no-JS guard noted inline.
+   ========================================================================== */
+
+/* ---------- fixed page chrome ---------- */
+.grain{
+  position:fixed;inset:0;z-index:600;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:300px 300px;mix-blend-mode:overlay;
+}
+.cursor-glow{
+  position:fixed;top:0;left:0;width:520px;height:520px;margin:-260px 0 0 -260px;
+  border-radius:50%;pointer-events:none;z-index:0;
+  background:radial-gradient(circle,rgba(201,111,74,.16),rgba(201,111,74,.05) 40%,transparent 65%);
+  will-change:transform;
+}
+.progress{position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,var(--terra),var(--terra2));z-index:700;transition:width .1s linear}
+
+/* ---------- layout primitives ---------- */
+.wrap{max-width:1240px;margin:0 auto;padding:0 28px;position:relative;z-index:1}
+.section{padding:120px 0;position:relative;scroll-margin-top:90px}
+.section-head{display:flex;flex-direction:column;gap:16px;margin-bottom:56px;max-width:780px}
+.sec-label{font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--terra2);display:inline-flex;align-items:center;gap:12px}
+.sec-label::before{content:"";width:28px;height:1px;background:var(--terra);display:inline-block}
+.sec-title{font-family:var(--serif);font-size:clamp(2rem,4.4vw,3.4rem);line-height:1.06;letter-spacing:-.025em;font-weight:500}
+.sec-intro{color:var(--muted);font-size:1rem;line-height:1.75;max-width:620px}
+
+/* ---------- scroll reveal (base state) ----------
+   `opacity:0` is scoped to `.js` so the page stays readable when JavaScript
+   is disabled. `html.js` is set by the inline head script in BaseLayout. */
+.reveal{transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.js .reveal{opacity:0;transform:translateY(34px)}
+.js .reveal.in{opacity:1;transform:none}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}

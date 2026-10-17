@@ -1,0 +1,19 @@
+---
+import type { Bilingual } from '../i18n/types';
+
+interface NavItem {
+  href: string;
+  label: Bilingual;
+}
+
+interface Props {
+  nav: NavItem[];
+}
+
+const { nav } = Astro.props;
+---
+<div class="mobile-menu" id="mobileMenu">
+  {nav.map((item) => (
+    <a href={item.href} data-en={item.label.en} data-id={item.label.id}>{item.label.en}</a>
+  ))}
+</div>

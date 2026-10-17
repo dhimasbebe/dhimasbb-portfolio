@@ -1,0 +1,93 @@
+---
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/components.css';
+import '../styles/motion.css';
+
+import MobileMenu from '../components/MobileMenu.astro';
+import Nav from '../components/Nav.astro';
+import type { Profile } from '../lib/content';
+
+interface Props {
+  profile: Profile;
+}
+
+const { profile } = Astro.props;
+const { meta, nav, brand, cv } = profile;
+
+const site = Astro.site ?? new URL('https://dhimasbb.web.id');
+const canonical = new URL(Astro.url.pathname, site).href;
+const ogImage = new URL(meta.ogImage, site).href;
+
+/** Structured data for the person this portfolio belongs to. */
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Dhimas Bintang Bagaskara',
+  jobTitle: 'Lead Service Representative Officer & Software Quality Assurance',
+  description: meta.description,
+  url: canonical,
+  image: ogImage,
+  email: 'mailto:dhimasbbagaskara@gmail.com',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Surabaya',
+    addressCountry: 'ID',
+  },
+  sameAs: [profile.contact.linkedin],
+  knowsAbout: [
+    'Software Quality Assurance',
+    'Test Strategy',
+    'Project Management',
+    'Service Operations',
+    'Customer Experience',
+  ],
+};
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{meta.title}</title>
+  <meta name="description" content={meta.description} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="canonical" href={canonical} />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Dhimas Bintang Bagaskara" />
+  <meta property="og:title" content={meta.title} />
+  <meta property="og:description" content={meta.description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content={meta.locale} />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={meta.title} />
+  <meta name="twitter:description" content={meta.description} />
+  <meta name="twitter:image" content={ogImage} />
+
+  <script is:inline>document.documentElement.classList.add('js');</script>
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(personSchema)}></script>
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="cursor-glow" id="glow" aria-hidden="true"></div>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+
+  <Nav nav={nav} brand={brand} cv={cv} />
+  <MobileMenu nav={nav} />
+
+  <slot />
+
+  <script>
+    import '../scripts/main';
+  </script>
+</body>
+</html>

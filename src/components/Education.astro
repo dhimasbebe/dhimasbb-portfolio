@@ -1,0 +1,39 @@
+---
+import type { CertificationItem, EducationItem, Profile } from '../lib/content';
+import SectionHead from './SectionHead.astro';
+
+interface Props {
+  section: Profile['sections']['education'];
+  labels: Profile['education'];
+  items: EducationItem[];
+  certifications: CertificationItem[];
+}
+
+const { section, labels, items, certifications } = Astro.props;
+---
+<section class="section" id="education">
+  <div class="wrap">
+    <SectionHead label={section.label} title={section.title} />
+    <div class="edu-grid">
+      <div class="reveal reveal-l">
+        <span class="col-label" data-en={labels.columnLabel.en} data-id={labels.columnLabel.id}>{labels.columnLabel.en}</span>
+        {items.map((item) => (
+          <div class="edu-item">
+            <h4>{item.institution}</h4>
+            <p class="edu-meta" data-en={item.meta.en} data-id={item.meta.id}>{item.meta.en}</p>
+            <p class="edu-note" data-en={item.note.en} data-id={item.note.id}>{item.note.en}</p>
+            {item.year ? <span class="edu-year">{item.year}</span> : null}
+          </div>
+        ))}
+      </div>
+      <div class="reveal d1 reveal-r">
+        <span class="col-label" data-en={labels.certificationLabel.en} data-id={labels.certificationLabel.id}>{labels.certificationLabel.en}</span>
+        <ul class="cert-list">
+          {certifications.map((certification) => (
+            <li><b>{certification.name}</b><span>{certification.issuer}</span></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,32 @@
+---
+import type { Profile, PublicationItem } from '../lib/content';
+import SectionHead from './SectionHead.astro';
+
+interface Props {
+  section: Profile['sections']['publications'];
+  items: PublicationItem[];
+}
+
+const { section, items } = Astro.props;
+
+/** Every second row gets the `d1` stagger, matching the original markup. */
+const delayClass = (index: number): string => (index % 2 === 1 ? ' d1' : '');
+const rowNumber = (index: number): string => String(index + 1).padStart(2, '0');
+---
+<section class="section" id="publications">
+  <div class="wrap">
+    <SectionHead label={section.label} title={section.title} intro={section.intro} />
+    <div class="pub-list">
+      {items.map((item, index) => (
+        <a class={'pub reveal' + delayClass(index)} href={item.href} target="_blank" rel="noopener">
+          <span class="pub-num">{rowNumber(index)}</span>
+          <div>
+            <h3 class="pub-title">{item.title}</h3>
+            <span class="pub-journal">{item.journal}</span>
+          </div>
+          <span class="pub-arrow" aria-hidden="true">↗</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

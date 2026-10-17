@@ -1,0 +1,47 @@
+---
+import type { Bilingual } from '../i18n/types';
+import LanguageToggle from './LanguageToggle.astro';
+
+interface NavItem {
+  href: string;
+  label: Bilingual;
+}
+
+interface Props {
+  nav: NavItem[];
+  brand: { mark: string; name: string; ariaLabel: string };
+  cv: { label: Bilingual; href: string };
+}
+
+const { nav, brand, cv } = Astro.props;
+
+// The brand lockup is two lines: the first two words bold, the rest muted.
+const nameParts = brand.name.trim().split(/\s+/);
+const brandFirstLine = nameParts.slice(0, 2).join(' ');
+const brandSecondLine = nameParts.slice(2).join(' ');
+---
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#home" class="brand" aria-label={brand.ariaLabel}>
+      <span class="brand-mark">{brand.mark}</span>
+      <span class="brand-name"><b>{brandFirstLine}</b>{brandSecondLine}</span>
+    </a>
+    <nav aria-label="Main">
+      <ul class="nav-links">
+        {nav.map((item) => (
+          <li>
+            <a href={item.href} data-en={item.label.en} data-id={item.label.id}>{item.label.en}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+    <div class="nav-right">
+      <LanguageToggle />
+      <a href={cv.href} download class="btn btn-ghost btn-sm nav-cv">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+        <span data-en={cv.label.en} data-id={cv.label.id}>{cv.label.en}</span>
+      </a>
+      <button class="burger" id="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>

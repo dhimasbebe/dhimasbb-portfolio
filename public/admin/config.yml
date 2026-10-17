@@ -1,0 +1,402 @@
+# =============================================================================
+# Sveltia CMS configuration — Dhimas Bintang Bagaskara portfolio
+# =============================================================================
+# The CMS is a Git-based editor for the Markdown files in src/content/.
+# Deploying a commit triggers a rebuild, so every edit goes live automatically.
+#
+# BEFORE FIRST USE
+#   1. Replace OWNER/REPO in `backend.repo` with the real GitHub repository.
+#   2. Register the OAuth worker (see README.md → "Editing content").
+#   3. Set `base_url` to that worker's URL.
+#
+# No OAuth is implemented in this repository by design.
+# =============================================================================
+
+backend:
+  name: github
+  repo: OWNER/REPO
+  branch: main
+  base_url: https://YOUR-OAUTH-WORKER.workers.dev
+  auth_endpoint: auth
+  commit_messages:
+    create: 'cms: create {{collection}} "{{slug}}"'
+    update: 'cms: update {{collection}} "{{slug}}"'
+    delete: 'cms: delete {{collection}} "{{slug}}"'
+    uploadMedia: 'cms: upload {{path}}'
+    deleteMedia: 'cms: delete {{path}}'
+
+site_url: https://dhimasbb.web.id
+display_url: https://dhimasbb.web.id
+logo_url: https://dhimasbb.web.id/favicon.svg
+locale: en
+publish_mode: simple
+
+media_folder: public/assets
+public_folder: /assets
+
+collections:
+  # ---------------------------------------------------------------------------
+  # Site singleton — nav, hero, section headings, about, contact, footer
+  # ---------------------------------------------------------------------------
+  - name: site
+    label: Site settings
+    files:
+      - name: profile
+        label: Profile
+        file: src/content/site/profile.md
+        fields:
+          - name: meta
+            label: Meta / SEO
+            widget: object
+            fields:
+              - { name: title, label: Page title, widget: string }
+              - { name: description, label: Meta description, widget: text }
+              - { name: ogImage, label: Open Graph image, widget: string }
+              - { name: locale, label: OG locale, widget: string }
+          - name: brand
+            label: Brand
+            widget: object
+            fields:
+              - { name: mark, label: Monogram, widget: string }
+              - { name: name, label: Full name, widget: string }
+              - { name: ariaLabel, label: Brand link label, widget: string }
+          - name: nav
+            label: Navigation
+            widget: list
+            fields:
+              - { name: href, label: Anchor, widget: string }
+              - name: label
+                label: Label
+                widget: object
+                fields:
+                  - { name: en, label: English, widget: string }
+                  - { name: id, label: Indonesian, widget: string }
+          - name: cv
+            label: CV download
+            widget: object
+            fields:
+              - name: label
+                label: Label
+                widget: object
+                fields:
+                  - { name: en, label: English, widget: string }
+                  - { name: id, label: Indonesian, widget: string }
+              - { name: href, label: File path, widget: string }
+          - name: hero
+            label: Hero
+            widget: object
+            fields:
+              - { name: eyebrow, label: Eyebrow, widget: string }
+              - name: titleLines
+                label: Title lines
+                widget: list
+                fields:
+                  - name: text
+                    label: Text
+                    widget: object
+                    fields:
+                      - { name: en, label: English, widget: string }
+                      - { name: id, label: Indonesian, widget: string }
+                  - { name: accent, label: Italic terracotta accent, widget: boolean, default: false }
+              - name: sub
+                label: Subtitle
+                widget: object
+                fields:
+                  - { name: en, label: English, widget: text }
+                  - { name: id, label: Indonesian, widget: text }
+              - name: primaryCta
+                label: Primary call to action
+                widget: object
+                fields:
+                  - name: label
+                    label: Label
+                    widget: object
+                    fields:
+                      - { name: en, label: English, widget: string }
+                      - { name: id, label: Indonesian, widget: string }
+                  - { name: href, label: Target, widget: string }
+              - name: stats
+                label: Stats
+                widget: list
+                fields:
+                  - { name: value, label: Value, widget: number, value_type: int }
+                  - { name: suffix, label: Suffix, widget: string, required: false }
+                  - name: label
+                    label: Label
+                    widget: object
+                    fields:
+                      - { name: en, label: English, widget: string }
+                      - { name: id, label: Indonesian, widget: string }
+              - { name: scrollCueLabel, label: Scroll cue label, widget: string }
+          - name: marquee
+            label: Marquee words
+            widget: list
+            field: { name: word, label: Word, widget: string }
+          - name: sections
+            label: Section headings
+            widget: object
+            fields:
+              - { name: about, label: About, widget: object, fields: [{ name: label, label: Label, widget: string }, { name: title, label: Title, widget: object, fields: [{ name: en, label: English, widget: string }, { name: id, label: Indonesian, widget: string }] }] }
+              - { name: experience, label: Experience, widget: object, fields: [{ name: label, label: Label, widget: string }, { name: title, label: Title, widget: object, fields: [{ name: en, label: English, widget: string }, { name: id, label: Indonesian, widget: string }] }] }
+              - { name: education, label: Education, widget: object, fields: [{ name: label, label: Label, widget: string }, { name: title, label: Title, widget: object, fields: [{ name: en, label: English, widget: string }, { name: id, label: Indonesian, widget: string }] }] }
+              - { name: projects, label: Projects, widget: object, fields: [{ name: label, label: Label, widget: string }, { name: title, label: Title, widget: object, fields: [{ name: en, label: English, widget: string }, { name: id, label: Indonesian, widget: string }] }, { name: intro, label: Intro, widget: object, fields: [{ name: en, label: English, widget: text }, { name: id, label: Indonesian, widget: text }], required: false }] }
+              - { name: publications, label: Publications, widget: object, fields: [{ name: label, label: Label, widget: string }, { name: title, label: Title, widget: object, fields: [{ name: en, label: English, widget: string }, { name: id, label: Indonesian, widget: string }] }, { name: intro, label: Intro, widget: object, fields: [{ name: en, label: English, widget: text }, { name: id, label: Indonesian, widget: text }], required: false }] }
+              - { name: contact, label: Contact, widget: object, fields: [{ name: label, label: Label, widget: string }, { name: title, label: Title, widget: object, fields: [{ name: en, label: English, widget: string }, { name: id, label: Indonesian, widget: string }] }, { name: intro, label: Intro, widget: object, fields: [{ name: en, label: English, widget: text }, { name: id, label: Indonesian, widget: text }], required: false }] }
+          - name: about
+            label: About
+            widget: object
+            fields:
+              - name: paragraphs
+                label: Paragraphs
+                widget: list
+                fields:
+                  - { name: en, label: English, widget: text }
+                  - { name: id, label: Indonesian, widget: text }
+              - name: duties
+                label: Duty cards
+                widget: list
+                fields:
+                  - { name: num, label: Number, widget: string }
+                  - name: title
+                    label: Title
+                    widget: object
+                    fields:
+                      - { name: en, label: English, widget: string }
+                      - { name: id, label: Indonesian, widget: string }
+                  - name: body
+                    label: Body
+                    widget: object
+                    fields:
+                      - { name: en, label: English, widget: text }
+                      - { name: id, label: Indonesian, widget: text }
+              - name: toolboxLabel
+                label: Toolbox label
+                widget: object
+                fields:
+                  - { name: en, label: English, widget: string }
+                  - { name: id, label: Indonesian, widget: string }
+              - name: chips
+                label: Toolbox chips
+                widget: list
+                field: { name: chip, label: Chip, widget: string }
+          - name: education
+            label: Education column labels
+            widget: object
+            fields:
+              - name: columnLabel
+                label: Education label
+                widget: object
+                fields:
+                  - { name: en, label: English, widget: string }
+                  - { name: id, label: Indonesian, widget: string }
+              - name: certificationLabel
+                label: Certifications label
+                widget: object
+                fields:
+                  - { name: en, label: English, widget: string }
+                  - { name: id, label: Indonesian, widget: string }
+          - name: contact
+            label: Contact
+            widget: object
+            fields:
+              - { name: email, label: Email address, widget: string }
+              - { name: linkedin, label: LinkedIn URL, widget: string }
+              - { name: whatsapp, label: WhatsApp URL, widget: string }
+              - name: emailLabel
+                label: Email button label
+                widget: object
+                fields:
+                  - { name: en, label: English, widget: string }
+                  - { name: id, label: Indonesian, widget: string }
+              - { name: mailLink, label: Email link text, widget: string }
+          - name: footer
+            label: Footer
+            widget: object
+            fields:
+              - { name: copyright, label: Copyright, widget: string }
+              - name: backToTop
+                label: Back to top
+                widget: object
+                fields:
+                  - { name: en, label: English, widget: string }
+                  - { name: id, label: Indonesian, widget: string }
+
+  # ---------------------------------------------------------------------------
+  # Experience
+  # ---------------------------------------------------------------------------
+  - name: experience
+    label: Experience
+    label_singular: Role
+    folder: src/content/experience
+    create: true
+    extension: md
+    format: frontmatter
+    identifier_field: role
+    summary: '{{order}} — {{role}}'
+    sortable_fields: [order]
+    fields:
+      - { name: order, label: Order, widget: number, value_type: int, default: 1 }
+      - name: tag
+        label: Employment type
+        widget: object
+        fields:
+          - { name: en, label: English, widget: string }
+          - { name: id, label: Indonesian, widget: string }
+      - { name: period, label: Period, widget: string }
+      - { name: role, label: Role, widget: string }
+      - { name: company, label: Company, widget: string }
+      - name: points
+        label: Highlights
+        widget: list
+        fields:
+          - { name: en, label: English, widget: text }
+          - { name: id, label: Indonesian, widget: text }
+
+  # ---------------------------------------------------------------------------
+  # Education
+  # ---------------------------------------------------------------------------
+  - name: education
+    label: Education
+    label_singular: Education entry
+    folder: src/content/education
+    create: true
+    extension: md
+    format: frontmatter
+    identifier_field: institution
+    summary: '{{order}} — {{institution}}'
+    sortable_fields: [order]
+    fields:
+      - { name: order, label: Order, widget: number, value_type: int, default: 1 }
+      - { name: institution, label: Institution, widget: string }
+      - name: meta
+        label: Meta line
+        widget: object
+        fields:
+          - { name: en, label: English, widget: string }
+          - { name: id, label: Indonesian, widget: string }
+      - name: note
+        label: Note
+        widget: object
+        fields:
+          - { name: en, label: English, widget: text }
+          - { name: id, label: Indonesian, widget: text }
+      - { name: year, label: Year, widget: string, required: false }
+
+  # ---------------------------------------------------------------------------
+  # Certifications
+  # ---------------------------------------------------------------------------
+  - name: certifications
+    label: Certifications
+    label_singular: Certification
+    folder: src/content/certifications
+    create: true
+    extension: md
+    format: frontmatter
+    identifier_field: name
+    summary: '{{order}} — {{name}}'
+    sortable_fields: [order]
+    fields:
+      - { name: order, label: Order, widget: number, value_type: int, default: 1 }
+      - { name: name, label: Certification, widget: string }
+      - { name: issuer, label: Issuer, widget: string }
+
+  # ---------------------------------------------------------------------------
+  # Projects
+  # ---------------------------------------------------------------------------
+  - name: projects
+    label: Projects
+    label_singular: Project
+    folder: src/content/projects
+    create: true
+    extension: md
+    format: frontmatter
+    identifier_field: order
+    summary: '{{order}} — {{title.en}}'
+    sortable_fields: [order]
+    fields:
+      - { name: order, label: Order, widget: number, value_type: int, default: 1 }
+      - name: title
+        label: Card title
+        widget: object
+        fields:
+          - { name: en, label: English, widget: string }
+          - { name: id, label: Indonesian, widget: string }
+      - name: card
+        label: Card (grid) copy
+        widget: object
+        fields:
+          - { name: ariaLabel, label: Accessible label, widget: string }
+          - name: tag
+            label: Tag
+            widget: object
+            fields:
+              - { name: en, label: English, widget: string }
+              - { name: id, label: Indonesian, widget: string }
+          - name: desc
+            label: Description
+            widget: object
+            fields:
+              - { name: en, label: English, widget: text }
+              - { name: id, label: Indonesian, widget: text }
+          - name: chips
+            label: Chips
+            widget: list
+            fields:
+              - { name: en, label: English, widget: string }
+              - { name: id, label: Indonesian, widget: string }
+      - name: tools
+        label: Tools
+        widget: list
+        field: { name: tool, label: Tool, widget: string }
+      - { name: link, label: External link, widget: string, required: false }
+      - name: en
+        label: Modal copy — English
+        widget: object
+        fields:
+          - { name: tag, label: Tag, widget: string }
+          - { name: status, label: Status, widget: string, required: false }
+          - { name: title, label: Title, widget: string }
+          - { name: sub, label: Subtitle, widget: string }
+          - { name: overview, label: Overview, widget: text }
+          - { name: challenge, label: Challenge, widget: text }
+          - { name: role, label: Role, widget: text }
+          - name: features
+            label: Features
+            widget: list
+            field: { name: feature, label: Feature, widget: string }
+          - { name: linkText, label: Link text, widget: string, required: false }
+      - name: id
+        label: Modal copy — Indonesian
+        widget: object
+        fields:
+          - { name: tag, label: Tag, widget: string }
+          - { name: status, label: Status, widget: string, required: false }
+          - { name: title, label: Title, widget: string }
+          - { name: sub, label: Subtitle, widget: string }
+          - { name: overview, label: Overview, widget: text }
+          - { name: challenge, label: Challenge, widget: text }
+          - { name: role, label: Role, widget: text }
+          - name: features
+            label: Features
+            widget: list
+            field: { name: feature, label: Feature, widget: string }
+          - { name: linkText, label: Link text, widget: string, required: false }
+
+  # ---------------------------------------------------------------------------
+  # Publications
+  # ---------------------------------------------------------------------------
+  - name: publications
+    label: Publications
+    label_singular: Publication
+    folder: src/content/publications
+    create: true
+    extension: md
+    format: frontmatter
+    identifier_field: title
+    summary: '{{order}} — {{title}}'
+    sortable_fields: [order]
+    fields:
+      - { name: order, label: Order, widget: number, value_type: int, default: 1 }
+      - { name: title, label: Title, widget: string }
+      - { name: journal, label: Journal / date line, widget: string }
+      - { name: href, label: Article URL, widget: string }

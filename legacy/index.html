@@ -252,6 +252,37 @@ button{font-family:inherit}
 .modal-scroll::-webkit-scrollbar{width:6px}
 .modal-scroll::-webkit-scrollbar-thumb{background:#332823;border-radius:6px}
 
+/* ---------- interactive motion layer ---------- */
+.scroll-cue{transition:opacity .45s ease}
+.nav-links a.active{color:var(--text)}
+.nav-links a.active::after{width:100%}
+.sec-label::before{width:0;transition:width .9s var(--ease) .12s}
+.in .sec-label::before{width:28px}
+.tw{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.1em;margin-bottom:-.1em}
+.tw-i{display:inline-block;transform:translateY(115%);transition:transform .95s var(--ease)}
+.in .tw-i{transform:none}
+.reveal-l{transform:translateX(-38px)}
+.reveal-l.in{transform:none}
+.reveal-r{transform:translateX(38px)}
+.reveal-r.in{transform:none}
+.reveal-scale{transform:translateY(22px) scale(.975)}
+.reveal-scale.in{transform:none}
+.exp-role{display:inline-block;position:relative}
+.exp-role::after{content:"";position:absolute;left:0;bottom:-3px;height:1px;width:100%;background:linear-gradient(90deg,var(--terra),transparent 88%);transform:scaleX(0);transform-origin:left;transition:transform 1s var(--ease) .25s}
+.exp-item.in .exp-role::after{transform:scaleX(1)}
+.pc-inner::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(240px circle at var(--mx,50%) var(--my,50%),rgba(226,114,91,.13),transparent 62%);opacity:0;transition:opacity .45s}
+.project-card:hover .pc-inner::after{opacity:1}
+.modal.open .modal-scroll > *{animation:modalIn .6s var(--ease) both}
+.modal.open .modal-scroll > *:nth-child(1){animation-delay:.05s}
+.modal.open .modal-scroll > *:nth-child(2){animation-delay:.09s}
+.modal.open .modal-scroll > *:nth-child(3){animation-delay:.13s}
+.modal.open .modal-scroll > *:nth-child(4){animation-delay:.17s}
+.modal.open .modal-scroll > *:nth-child(5){animation-delay:.21s}
+.modal.open .modal-scroll > *:nth-child(6){animation-delay:.25s}
+.modal.open .modal-scroll > *:nth-child(7){animation-delay:.29s}
+.modal.open .modal-scroll > *:nth-child(8){animation-delay:.33s}
+@keyframes modalIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
 @media(max-width:1080px){
   .about-grid{gap:48px}
   .nav-links{gap:20px}
@@ -515,7 +546,7 @@ button{font-family:inherit}
       <h2 class="sec-title" data-en="Education and credentials" data-id="Pendidikan dan sertifikasi">Education and credentials</h2>
     </div>
     <div class="edu-grid">
-      <div class="reveal">
+      <div class="reveal reveal-l">
         <span class="col-label" data-en="Education" data-id="Pendidikan">Education</span>
         <div class="edu-item">
           <h4>Telkom University Surabaya</h4>
@@ -541,7 +572,7 @@ button{font-family:inherit}
           <p class="edu-note" data-en="Digital talent development program for software and technology professionals." data-id="Program pengembangan talenta digital untuk profesional perangkat lunak dan teknologi.">Digital talent development program for software and technology professionals.</p>
         </div>
       </div>
-      <div class="reveal d1">
+      <div class="reveal d1 reveal-r">
         <span class="col-label" data-en="Certifications" data-id="Sertifikasi">Certifications</span>
         <ul class="cert-list">
           <li><b>Google Project Management</b><span>Google</span></li>
@@ -685,7 +716,7 @@ button{font-family:inherit}
 <section class="contact" id="contact">
   <div class="contact-glow" aria-hidden="true"></div>
   <div class="wrap">
-    <div class="reveal">
+    <div class="reveal reveal-scale">
       <span class="sec-label" style="justify-content:center">06 — Contact</span>
       <h2 class="contact-title" data-en="Let's build something that works." data-id="Mari bangun sesuatu yang benar-benar bekerja.">Let's build something that works.</h2>
       <p class="contact-sub" data-en="Open to conversations about quality assurance, project delivery, and service transformation. Based in Surabaya, Indonesia." data-id="Terbuka untuk diskusi tentang quality assurance, pengiriman proyek, dan transformasi layanan. Berdomisili di Surabaya, Indonesia.">Open to conversations about quality assurance, project delivery, and service transformation. Based in Surabaya, Indonesia.</p>
@@ -745,8 +776,20 @@ button{font-family:inherit}
       b.classList.toggle("active", on);
       b.setAttribute("aria-pressed", on ? "true" : "false");
     });
+    splitTitles();
     if(save !== false){ try{ localStorage.setItem("portfolio-lang", l); }catch(e){} }
     if(modal && modal.classList.contains("open")) closeModal();
+  }
+
+  function splitTitles(){
+    $$(".sec-title, .contact-title").forEach(function(el){
+      var t = (el.textContent || "").replace(/\s+/g, " ").trim();
+      if(!t) return;
+      el.innerHTML = t.split(" ").map(function(w, i){
+        var safe = w.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        return '<span class="tw"><span class="tw-i" style="transition-delay:' + (i * .05).toFixed(2) + 's">' + safe + '</span></span>';
+      }).join(" ");
+    });
   }
 
   var saved = "en";
@@ -758,14 +801,76 @@ button{font-family:inherit}
   });
 
   var nav = $("#nav"), progress = $("#progress");
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var heroBg = $(".hero-bg"), heroInner = $(".hero-inner"), cue = $(".scroll-cue");
+  var contactGlow = $(".contact-glow"), contactSection = $("#contact");
+  var marqueeTrack = $(".marquee-track");
+  var navLinks = $$(".nav-links a"), sectionEls = $$("main section[id]");
+  var marqueeDur = 38, marqueeApplied = 38, lastScrollY = window.scrollY || 0;
+
   function onScroll(){
     var y = window.scrollY || document.documentElement.scrollTop;
     nav.classList.toggle("scrolled", y > 24);
     var h = document.documentElement.scrollHeight - window.innerHeight;
     progress.style.width = (h > 0 ? (y / h) * 100 : 0) + "%";
+
+    var spyY = y + window.innerHeight * .38;
+    var current = sectionEls.length ? sectionEls[0].id : "";
+    for(var i = 0; i < sectionEls.length; i++){
+      if(sectionEls[i].offsetTop <= spyY) current = sectionEls[i].id;
+    }
+    navLinks.forEach(function(a){
+      a.classList.toggle("active", a.getAttribute("href") === "#" + current);
+    });
+
+    if(!reduce){
+      if(cue){
+        var cueO = Math.max(0, 1 - y / 220);
+        cue.style.opacity = cueO.toFixed(3);
+        cue.style.pointerEvents = cueO < .1 ? "none" : "";
+      }
+      var wide = window.innerWidth > 900;
+      if(heroBg && wide){
+        heroBg.style.transform = "translateY(" + (y * .3).toFixed(1) + "px)";
+      }
+      if(heroInner){
+        heroInner.style.transform = wide ? "translateY(" + (y * .1).toFixed(1) + "px)" : "";
+        heroInner.style.opacity = Math.max(0, 1 - y / (window.innerHeight * .85)).toFixed(3);
+      }
+      if(contactGlow && contactSection && wide){
+        var top = contactSection.offsetTop;
+        var p = (y + window.innerHeight - top) / (window.innerHeight + contactSection.offsetHeight);
+        p = Math.max(0, Math.min(1, p));
+        contactGlow.style.transform = "translateX(-50%) translateY(" + ((p - .5) * -70).toFixed(1) + "px)";
+      }
+      if(marqueeTrack){
+        var v = Math.abs(y - lastScrollY);
+        if(v > 0) marqueeDur = Math.max(9, Math.min(marqueeDur, 38 - v * 1.5));
+      }
+      lastScrollY = y;
+    }
   }
-  window.addEventListener("scroll", onScroll, {passive:true});
+
+  var ticking = false;
+  function onScrollRaf(){
+    if(ticking) return;
+    ticking = true;
+    requestAnimationFrame(function(){ ticking = false; onScroll(); });
+  }
+  window.addEventListener("scroll", onScrollRaf, {passive:true});
+  window.addEventListener("resize", onScroll, {passive:true});
   onScroll();
+
+  if(marqueeTrack && !reduce){
+    (function marqueeLoop(){
+      marqueeDur += (38 - marqueeDur) * .03;
+      if(Math.abs(marqueeDur - marqueeApplied) > .05){
+        marqueeApplied = marqueeDur;
+        marqueeTrack.style.animationDuration = marqueeDur.toFixed(2) + "s";
+      }
+      requestAnimationFrame(marqueeLoop);
+    })();
+  }
 
   var burger = $("#burger"), mobileMenu = $("#mobileMenu");
   burger.addEventListener("click", function(){
@@ -780,8 +885,6 @@ button{font-family:inherit}
       burger.setAttribute("aria-expanded","false");
     });
   });
-
-  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   function countUp(el){
     var target = parseInt(el.getAttribute("data-count"), 10) || 0;
@@ -849,6 +952,8 @@ button{font-family:inherit}
         var r = card.getBoundingClientRect();
         var px = (e.clientX - r.left) / r.width - .5;
         var py = (e.clientY - r.top) / r.height - .5;
+        inner.style.setProperty("--mx", (e.clientX - r.left) + "px");
+        inner.style.setProperty("--my", (e.clientY - r.top) + "px");
         inner.style.transform = "perspective(900px) rotateX(" + (-py*5) + "deg) rotateY(" + (px*5) + "deg) translateY(-4px)";
       });
       card.addEventListener("mouseleave", function(){ inner.style.transform = ""; });

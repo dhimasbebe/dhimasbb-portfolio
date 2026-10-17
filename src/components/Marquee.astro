@@ -1,0 +1,21 @@
+---
+interface Props {
+  words: string[];
+}
+
+const { words } = Astro.props;
+---
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <div class="marquee-group">
+      {words.map((word) => (
+        <span>{word}</span><b>✦</b>
+      ))}
+    </div>
+    <div class="marquee-group">
+      {words.map((word) => (
+        <span>{word}</span><b>✦</b>
+      ))}
+    </div>
+  </div>
+</div>

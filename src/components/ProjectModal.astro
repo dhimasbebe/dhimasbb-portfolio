@@ -1,0 +1,22 @@
+---
+import { buildModalPayload, serializeModalPayload } from '../lib/modal-payload';
+import type { ProjectEntry } from '../lib/content';
+
+interface Props {
+  projects: ProjectEntry[];
+}
+
+const { projects } = Astro.props;
+
+// Only modal copy is embedded — the shorter card copy stays in the markup.
+const payload = buildModalPayload(projects);
+const payloadJson = serializeModalPayload(payload);
+---
+<div class="modal" id="modal" aria-hidden="true">
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+    <div class="modal-scroll" id="modalBody"></div>
+  </div>
+</div>
+<script type="application/json" id="projects-data" is:inline set:html={payloadJson}></script>

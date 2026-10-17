@@ -1,0 +1,67 @@
+/* ==========================================================================
+   motion.css — keyframes, scroll-reveal variants, and the interactive
+   motion layer. Copied from the original single-file <style> block
+   (index.html) and scoped to `.js` where the effect needs JavaScript.
+   ========================================================================== */
+
+/* ---------- keyframes ---------- */
+@keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-70px,60px) scale(1.12)}}
+@keyframes drift2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(60px,-50px) scale(1.08)}}
+@keyframes rise{to{transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes cue{0%{opacity:0;transform:translateY(0)}25%{opacity:1}100%{opacity:0;transform:translateY(15px)}}
+@keyframes scroll{to{transform:translateX(-50%)}}
+@keyframes pulse{50%{opacity:.4}}
+@keyframes modalIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+/* ---------- interactive motion layer ---------- */
+.scroll-cue{transition:opacity .45s ease}
+.nav-links a.active{color:var(--text)}
+.nav-links a.active::after{width:100%}
+.js .sec-label::before{width:0;transition:width .9s var(--ease) .12s}
+.in .sec-label::before{width:28px}
+
+/* word-by-word title reveal (splitTitles writes these spans at runtime) */
+.tw{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.1em;margin-bottom:-.1em}
+.js .tw-i{display:inline-block;transform:translateY(115%);transition:transform .95s var(--ease)}
+.in .tw-i{transform:none}
+
+/* directional + scale reveal variants */
+.js .reveal-l{transform:translateX(-38px)}
+.js .reveal-l.in{transform:none}
+.js .reveal-r{transform:translateX(38px)}
+.js .reveal-r.in{transform:none}
+.js .reveal-scale{transform:translateY(22px) scale(.975)}
+.js .reveal-scale.in{transform:none}
+
+/* experience role underline */
+.exp-role{display:inline-block;position:relative}
+.exp-role::after{content:"";position:absolute;left:0;bottom:-3px;height:1px;width:100%;background:linear-gradient(90deg,var(--terra),transparent 88%);transform:scaleX(0);transform-origin:left;transition:transform 1s var(--ease) .25s}
+.exp-item.in .exp-role::after{transform:scaleX(1)}
+
+/* project card pointer spotlight */
+.pc-inner::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(240px circle at var(--mx,50%) var(--my,50%),rgba(226,114,91,.13),transparent 62%);opacity:0;transition:opacity .45s}
+.project-card:hover .pc-inner::after{opacity:1}
+
+/* modal content stagger */
+.modal.open .modal-scroll > *{animation:modalIn .6s var(--ease) both}
+.modal.open .modal-scroll > *:nth-child(1){animation-delay:.05s}
+.modal.open .modal-scroll > *:nth-child(2){animation-delay:.09s}
+.modal.open .modal-scroll > *:nth-child(3){animation-delay:.13s}
+.modal.open .modal-scroll > *:nth-child(4){animation-delay:.17s}
+.modal.open .modal-scroll > *:nth-child(5){animation-delay:.21s}
+.modal.open .modal-scroll > *:nth-child(6){animation-delay:.25s}
+.modal.open .modal-scroll > *:nth-child(7){animation-delay:.29s}
+.modal.open .modal-scroll > *:nth-child(8){animation-delay:.33s}
+
+/* ---------- reduced motion ---------- */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms !important;animation-delay:0s !important;transition-duration:.001ms !important}
+  html{scroll-behavior:auto}
+  .hero-title .line-inner{transform:none}
+  .hero-sub,.hero-actions,.stat,.eyebrow{opacity:1}
+  /* reveal states are neutralised so nothing stays hidden */
+  .js .reveal,.js .reveal-l,.js .reveal-r,.js .reveal-scale{opacity:1;transform:none}
+  .js .tw-i{transform:none}
+  .js .sec-label::before{width:28px}
+}
