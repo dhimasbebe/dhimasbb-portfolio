@@ -216,7 +216,6 @@ collections:
                 fields:
                   - { name: en, label: English, widget: string }
                   - { name: id, label: Indonesian, widget: string }
-              - { name: mailLink, label: Email link text, widget: string }
           - name: footer
             label: Footer
             widget: object

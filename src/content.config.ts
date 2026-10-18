@@ -96,7 +96,6 @@ const site = defineCollection({
       linkedin: z.string(),
       whatsapp: z.string(),
       emailLabel: bilingual,
-      mailLink: z.string(),
     }),
     footer: z.object({
       copyright: z.string(),

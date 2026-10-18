@@ -206,14 +206,6 @@
 .projects-dots button{width:8px;height:8px;padding:0;border-radius:999px;border:1px solid var(--line-strong);background:transparent;cursor:pointer;transition:width .3s var(--ease),background .3s,border-color .3s}
 .projects-dots button.active{width:22px;background:var(--terra2);border-color:var(--terra2)}
 
-/* ---------- sticky section headings (desktop only) ---------- */
-@media(min-width:981px){
-  .section-head{position:sticky;top:calc(var(--nav-h) + 10px);z-index:10;
-    background:rgba(14,12,11,.86);
-    -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
-    padding:16px 28px;margin:0 -28px 56px;border-bottom:1px solid var(--line)}
-}
-
 /* ==========================================================================
    responsive breakpoints — 1080 / 980 / 640 from the original, plus 420
    ========================================================================== */

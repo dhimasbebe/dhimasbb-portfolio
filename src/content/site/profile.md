@@ -180,7 +180,6 @@ contact:
   linkedin: "https://id.linkedin.com/in/dhimasbb"
   whatsapp: "https://wa.me/6285111406055"
   emailLabel: { en: "Email me", id: "Kirim email" }
-  mailLink: "dhimasbbagaskara@gmail.com"
 
 footer:
   copyright: "© 2026 Dhimas Bintang Bagaskara · Surabaya, Indonesia"
