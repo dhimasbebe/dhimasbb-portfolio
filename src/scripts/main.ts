@@ -1,3 +1,4 @@
+import { initProjectsCarousel } from './carousel';
 import { initLang } from './lang';
 import { initModal } from './modal';
 import { initNav } from './nav';
@@ -19,6 +20,7 @@ function boot(): void {
   initReveal();
   initPointer();
   initModal();
+  initProjectsCarousel();
 }
 
 if (document.readyState === 'loading') {

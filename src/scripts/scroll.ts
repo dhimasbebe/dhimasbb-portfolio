@@ -14,6 +14,26 @@ function all<T extends Element>(selector: string): T[] {
   return Array.prototype.slice.call(document.querySelectorAll(selector)) as T[];
 }
 
+// Experience rail refs — cached at init, read by `updateExpRail()` on every
+// scroll frame. Both must exist for the fill to move; `updateExpRail()`
+// no-ops when either is missing (e.g. a page without the rail).
+let railEl: HTMLElement | null = null;
+let expEl: HTMLElement | null = null;
+
+/**
+ * Fills the experience rail in proportion to how far the experience list
+ * has scrolled through the viewport. `scaleY` only — no layout thrash.
+ */
+function updateExpRail(): void {
+  if (!expEl || !railEl) return;
+  const rect = expEl.getBoundingClientRect();
+  const vh = window.innerHeight;
+  // 0 when the list top hits 55% of the viewport, 1 when its bottom passes 55%.
+  const anchor = vh * 0.55;
+  const p = Math.max(0, Math.min(1, (anchor - rect.top) / (rect.height + vh * 0.25)));
+  railEl.style.transform = 'scaleY(' + p.toFixed(4) + ')';
+}
+
 /** Initialises every scroll-driven effect. */
 export function initScroll(): void {
   const nav = document.getElementById('nav');
@@ -26,6 +46,10 @@ export function initScroll(): void {
   const contactGlow = document.querySelector<HTMLElement>('.contact-glow');
   const contactSection = document.getElementById('contact');
   const marqueeTrack = document.querySelector<HTMLElement>('.marquee-track');
+
+  // Experience rail — the fill is scaleY-only and driven from onScroll.
+  expEl = document.getElementById('experience');
+  railEl = document.querySelector<HTMLElement>('.exp-rail-fill');
 
   const navLinks = all<HTMLAnchorElement>('.nav-links a');
   const sectionEls = all<HTMLElement>('main section[id]');
@@ -87,6 +111,8 @@ export function initScroll(): void {
     }
 
     lastScrollY = y;
+
+    updateExpRail();
   };
 
   let ticking = false;
@@ -114,4 +140,14 @@ export function initScroll(): void {
     };
     marqueeLoop();
   }
+
+  // The language toggle rewrites text nodes (layout is identical in practice,
+  // but margins/scrollTop can shift) — re-measure the rail once the toggle
+  // handler in `lang.ts` has run. Registered after `initLang()`, so this
+  // listener fires second and sees the post-swap layout.
+  all<HTMLButtonElement>('.lang button').forEach((button) => {
+    button.addEventListener('click', () => {
+      updateExpRail();
+    });
+  });
 }

@@ -18,5 +18,15 @@ const { section, projects } = Astro.props;
         <ProjectCard entry={entry} index={index} />
       ))}
     </div>
+    <div class="projects-dots" role="group" aria-label="Projects pagination">
+      {projects.map((_, index) => (
+        <button
+          type="button"
+          data-dot={index}
+          aria-label={'Project ' + (index + 1)}
+          aria-current={index === 0 ? 'true' : undefined}
+        ></button>
+      ))}
+    </div>
   </div>
 </section>

@@ -1,5 +1,5 @@
 ---
-order: 4
+order: 7
 title: { en: "CRAB-X", id: "CRAB-X" }
 card:
   ariaLabel: "Open CRAB-X project details"

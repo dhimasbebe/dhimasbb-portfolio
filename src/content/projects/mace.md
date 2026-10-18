@@ -1,5 +1,5 @@
 ---
-order: 3
+order: 6
 title: { en: "MAC-E", id: "MAC-E" }
 card:
   ariaLabel: "Open MAC-E project details"

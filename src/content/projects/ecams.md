@@ -1,5 +1,5 @@
 ---
-order: 1
+order: 4
 title: { en: "ECAMS", id: "ECAMS" }
 # Card copy (project grid) — intentionally shorter than the modal copy below.
 card:

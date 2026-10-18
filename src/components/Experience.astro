@@ -13,8 +13,10 @@ const { section, items } = Astro.props;
   <div class="wrap">
     <SectionHead label={section.label} title={section.title} />
     <div class="exp-list">
+      <div class="exp-rail" aria-hidden="true"><div class="exp-rail-fill"></div></div>
       {items.map((item) => (
-        <article class="exp-item reveal">
+        <article class="exp-item rail-item reveal">
+          <span class="exp-dot" aria-hidden="true"></span>
           <div class="exp-side">
             <span class="exp-tag" data-en={item.tag.en} data-id={item.tag.id}>{item.tag.en}</span>
             <span class="exp-period">{item.period}</span>

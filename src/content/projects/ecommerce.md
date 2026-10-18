@@ -1,5 +1,5 @@
 ---
-order: 8
+order: 3
 title: { en: "E-commerce Testing", id: "Pengujian E-commerce" }
 card:
   ariaLabel: "Open e-commerce testing project details"

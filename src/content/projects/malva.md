@@ -1,5 +1,5 @@
 ---
-order: 6
+order: 1
 title: { en: "Malva", id: "Malva" }
 card:
   ariaLabel: "Open Malva project details"

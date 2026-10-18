@@ -1,5 +1,5 @@
 ---
-order: 2
+order: 5
 title: { en: "SQR21", id: "SQR21" }
 card:
   ariaLabel: "Open SQR21 project details"

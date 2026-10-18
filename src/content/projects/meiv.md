@@ -1,5 +1,5 @@
 ---
-order: 5
+order: 2
 title: { en: "Mei-V", id: "Mei-V" }
 card:
   ariaLabel: "Open Mei-V project details"

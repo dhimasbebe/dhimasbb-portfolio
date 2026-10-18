@@ -39,7 +39,7 @@ src/
     experience/           3 role
     education/            4 entri
     certifications/       4 sertifikasi
-    projects/             8 proyek
+    projects/             7 proyek
     publications/         2 jurnal
   layouts/BaseLayout.astro  <head>, SEO, chrome (grain/glow/progress), Nav, MobileMenu
   pages/index.astro         satu-satunya halaman
