@@ -1,7 +1,11 @@
 /**
  * Scroll layer: sticky nav state, reading progress, scrollspy, hero/contact
- * parallax and the scroll-velocity marquee. Ported 1:1 from the original
- * inline script, including the `ticking` rAF guard.
+ * parallax and the experience rail. Ported 1:1 from the original inline
+ * script, including the `ticking` rAF guard.
+ *
+ * The marquee deliberately has NO scroll coupling: it runs as a plain CSS
+ * animation (`scroll 38s linear infinite`) on the compositor, so page
+ * scrolling never disturbs its motion.
  */
 
 /** Matches the original `reduce` guard. */
@@ -45,7 +49,6 @@ export function initScroll(): void {
   const cue = document.querySelector<HTMLElement>('.scroll-cue');
   const contactGlow = document.querySelector<HTMLElement>('.contact-glow');
   const contactSection = document.getElementById('contact');
-  const marqueeTrack = document.querySelector<HTMLElement>('.marquee-track');
 
   // Experience rail — the fill is scaleY-only and driven from onScroll.
   expEl = document.getElementById('experience');
@@ -53,10 +56,6 @@ export function initScroll(): void {
 
   const navLinks = all<HTMLAnchorElement>('.nav-links a');
   const sectionEls = all<HTMLElement>('main section[id]');
-
-  let marqueeDur = 38;
-  let marqueeApplied = 38;
-  let lastScrollY = window.scrollY || 0;
 
   const onScroll = (): void => {
     const y = window.scrollY || document.documentElement.scrollTop;
@@ -105,13 +104,6 @@ export function initScroll(): void {
         'translateX(-50%) translateY(' + ((ratio - 0.5) * -70).toFixed(1) + 'px)';
     }
 
-    if (marqueeTrack) {
-      const velocity = Math.abs(y - lastScrollY);
-      if (velocity > 0) marqueeDur = Math.max(9, Math.min(marqueeDur, 38 - velocity * 1.5));
-    }
-
-    lastScrollY = y;
-
     updateExpRail();
   };
 
@@ -128,18 +120,6 @@ export function initScroll(): void {
   window.addEventListener('scroll', onScrollRaf, { passive: true });
   window.addEventListener('resize', onScroll, { passive: true });
   onScroll();
-
-  if (marqueeTrack && !reduce) {
-    const marqueeLoop = (): void => {
-      marqueeDur += (38 - marqueeDur) * 0.03;
-      if (Math.abs(marqueeDur - marqueeApplied) > 0.05) {
-        marqueeApplied = marqueeDur;
-        marqueeTrack.style.animationDuration = marqueeDur.toFixed(2) + 's';
-      }
-      requestAnimationFrame(marqueeLoop);
-    };
-    marqueeLoop();
-  }
 
   // The language toggle rewrites text nodes (layout is identical in practice,
   // but margins/scrollTop can shift) — re-measure the rail once the toggle
