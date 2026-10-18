@@ -50,7 +50,6 @@ src/
   lib/                      content.ts (akses koleksi), modal-payload.ts (payload JSON modal)
   styles/                   tokens.css, base.css, components.css, motion.css
   scripts/                  main.ts + lang, scroll, reveal, pointer, modal, nav, carousel
-legacy/index.html           situs single-file sebelumnya (arsip, tidak dipakai build)
 backup/                     snapshot historis (tidak di-commit, hanya lokal)
 deploy-backup/              salinan .deploy/ sebelum migrasi (tidak di-commit)
 ../cms-auth-worker/         source OAuth worker CMS (deploy terpisah, di luar repo ini)
